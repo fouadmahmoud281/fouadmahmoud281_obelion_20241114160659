@@ -1,121 +1,154 @@
-import React, { useState, useEffect } from 'react';
-import { Navigate, Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
 function Register() {
-  const [firstName, setFirstName] = useState('');
-  const [familyName, setFamilyName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
-  const [redirectToLogin, setRedirectToLogin] = useState(false);
-  const [error, setError] = useState('');
-  const location = useLocation();
+  const [formData, setFormData] = useState({
+    firstName: '',
+    familyName: '',
+    email: '',
+    phoneNumber: '',
+    password: '',
+  });
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const token = params.get('token');
-    if (token) {
-      // Handle token if necessary
-    }
-  }, [location]);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setLoading(true);
+    setErrorMessage('');
+    setSuccessMessage('');
     try {
-      const response = await fetch('https://attendapp-backend.cloud-stacks.com/api/register', {
+      const response = await fetch('https://attendapp-backend.cloud-stacks.com/api/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName,
-          familyName,
-          email,
-          phoneNumber,
-          password,
-        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
       });
       const data = await response.json();
       if (response.ok) {
-        setRedirectToLogin(true);
+        setSuccessMessage(data.message);
+        navigate('/login');
       } else {
-        setError(data.error || 'Registration failed');
+        setErrorMessage(data.error || 'Registration failed');
       }
-    } catch {
-      setError('An error occurred');
+    } catch (error) {
+      setErrorMessage('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleGoogleSignIn = () => {
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
+  const handleGoogleLogin = () => {
     window.location.href = 'https://attendapp-backend.cloud-stacks.com/api/auth/google';
   };
 
-  if (redirectToLogin) {
-    return <Navigate to="/login" />;
-  }
-
   return (
     <div className="register-container">
-      <h2>Create an account</h2>
-      {error && <div className="error-message">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>First Name</label>
-          <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-          />
+      <div className="register-left">
+        <div className="overlay-text">
+          <div className="logo">AttendOne</div>
+          <h1>Welcome to AttendOne</h1>
+          <p>Your event management solution</p>
         </div>
-        <div className="form-group">
-          <label>Family Name</label>
-          <input
-            type="text"
-            value={familyName}
-            onChange={(e) => setFamilyName(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Email Address</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Phone Number</label>
-          <input
-            type="tel"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Create Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Sign Up</button>
-      </form>
-      <div className="social-login">
-        <p>Or sign up with</p>
-        <button className="google-signin-button" onClick={handleGoogleSignIn}>
-          Google
-        </button>
       </div>
-      <div className="login-redirect">
-        <p>
-          Already have an account? <Link to="/login">Sign In</Link>
-        </p>
+      <div className="register-right">
+        <div className="form-container">
+          <form onSubmit={handleSubmit}>
+            {errorMessage && <div className="error-message">{errorMessage}</div>}
+            {successMessage && <div className="success-message">{successMessage}</div>}
+            <div className="form-group">
+              <label htmlFor="firstName">First Name</label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                placeholder="First Name"
+                value={formData.firstName}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="familyName">Family Name</label>
+              <input
+                type="text"
+                id="familyName"
+                name="familyName"
+                placeholder="Family Name"
+                value={formData.familyName}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="phoneNumber">Phone Number</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                placeholder="Phone Number"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <div className="password-input">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <span
+                  className="toggle-password"
+                  onClick={togglePasswordVisibility}
+                />
+              </div>
+            </div>
+            <button type="submit" className="btn-register" disabled={loading}>
+              {loading ? 'Registering...' : 'Register'}
+            </button>
+            <button type="button" className="btn-login" onClick={handleLoginClick}>
+              Login
+            </button>
+            <button type="button" className="btn-google-login" onClick={handleGoogleLogin}>
+              Login with Google
+            </button>
+            <a href="/reset-password" className="forgot-password">Forgot Password?</a>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -1,58 +1,69 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './PasswordReset.css';
+import axios from 'axios';
 
 function PasswordReset() {
-    const [email, setEmail] = useState('');
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
+  const [email, setEmail] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        try {
-            const response = await fetch('https://attendapp-backend.cloud-stacks.com/api/auth/password-reset', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                setMessage(data.message || 'If an account with that email exists, a password reset link has been sent.');
-                setError('');
-            } else {
-                setError(data.error || 'An error occurred during password reset.');
-                setMessage('');
-            }
-        } catch (err) {
-            setError('An error occurred during password reset.');
-            setMessage('');
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      const response = await axios.post('https://attendapp-backend.cloud-stacks.com/api/auth/reset-password', {
+        email: email
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
         }
-    };
+      });
+      setSuccessMessage(response.data.message);
+      setErrorMessage('');
+    } catch (error) {
+      let message = error.response && error.response.data && error.response.data.error ? error.response.data.error : 'Something went wrong';
+      setErrorMessage(message);
+      setSuccessMessage('');
+    }
+  }
 
-    return (
-        <div className="password-reset-container">
-            <h2>Password Reset</h2>
-            {message && <p>{message}</p>}
-            {error && <p className="error">{error}</p>}
-            {!message && (
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="email">Email Address</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                    <button type="submit">Reset Password</button>
-                </form>
-            )}
+  return (
+    <div className="password-reset-container">
+      <div className="left-section">
+        <div className="background-image">
+          <div className="overlay-text">
+            <div className="logo">AttendOne</div>
+            <h1>Reset Your Password</h1>
+            <p>Enter your email to reset your password and continue managing your events.</p>
+          </div>
         </div>
-    );
+      </div>
+      <div className="right-section">
+        <div className="form-container">
+          <h2>Password Reset</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="input-group">
+              <label htmlFor="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="reset-button">Reset Password</button>
+          </form>
+          {successMessage && <p className="success-message">{successMessage}</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          <div className="links">
+            <Link to="/login">Back to Login</Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default PasswordReset;
