@@ -1,83 +1,75 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
+const { Model, DataTypes, Sequelize } = require('sequelize');
 const bcrypt = require('bcrypt');
 
-const sequelize = new Sequelize('attendOne', 'root', 'root', {
-  host: 'db',
+const sequelize = new Sequelize('sql7745334', 'sql7745334', 'uzVN9Mmcps', {
+  host: 'sql7.freesqldatabase.com',
   port: 3306,
-  dialect: 'mysql'
+  dialect: 'mysql',
 });
 
-class User extends Model {}
 
-User.init({
-  id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false,
-    autoIncrement: true,
-    primaryKey: true
-  },
-  firstName: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  familyName: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-    validate: {
-      isEmail: true
-    }
-  },
-  phoneNumber: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true
-  },
-  passwordHash: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  googleId: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    unique: true
+class User extends Model {
+  async comparePassword(password) {
+    return await bcrypt.compare(password, this.password);
   }
-}, {
-  sequelize,
-  modelName: 'users',
-  tableName: 'users',
-  timestamps: false,
-  hooks: {
-    beforeCreate: async (user) => {
-      if (user.password) {
-        const salt = await bcrypt.genSalt(10);
-        user.passwordHash = await bcrypt.hash(user.password, salt);
-      }
+  static async createTable() {
+    try {
+      await sequelize.sync({ force: false });
+      console.log('Table created successfully.');
+    } catch (error) {
+      console.error('Error creating table:', error);
+    }
+  }
+}
+
+User.init(
+  {
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    beforeUpdate: async (user) => {
-      if (user.password) {
-        const salt = await bcrypt.genSalt(10);
-        user.passwordHash = await bcrypt.hash(user.password, salt);
-      }
-    }
-  }
-});
-
-Object.defineProperty(User.prototype, 'password', {
-  get() {
-    return this._password;
+    familyName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+    },
+    phoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
-  set(value) {
-    this._password = value;
+  {
+    sequelize,
+    modelName: 'User',
+    tableName: 'users',
+    timestamps: false,
+    hooks: {
+      beforeCreate: async (user) => {
+        if (user.password) {
+          const salt = await bcrypt.genSalt(10);
+          user.password = await bcrypt.hash(user.password, salt);
+        }
+      },
+      beforeUpdate: async (user) => {
+        if (user.changed('password')) {
+          const salt = await bcrypt.genSalt(10);
+          user.password = await bcrypt.hash(user.password, salt);
+        }
+      },
+    },
   }
-});
-
-User.prototype.validatePassword = async function(password) {
-  return await bcrypt.compare(password, this.passwordHash);
-};
-
+);
+User.createTable();
 module.exports = User;

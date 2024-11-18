@@ -1,7 +1,9 @@
-const { Op } = require('sequelize');
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { Op } = require('sequelize');
 
-async function registerUser(req, res) {
+exports.register = async (req, res) => {
   try {
     const { firstName, familyName, email, phoneNumber, password } = req.body;
 
@@ -12,10 +14,10 @@ async function registerUser(req, res) {
     });
 
     if (existingUser) {
-      return res.status(400).json({ error: 'User with provided email or phone number already exists' });
+      return res.status(400).json({ error: 'User already exists' });
     }
 
-    const newUser = await User.create({
+    const user = await User.create({
       firstName,
       familyName,
       email,
@@ -23,56 +25,54 @@ async function registerUser(req, res) {
       password,
     });
 
-    return res.status(201).json({ message: 'User registered successfully', userId: newUser.id });
-  } catch (error) {
-    return res.status(500).json({ error: 'An error occurred during registration' });
-  }
-}
+    const { password: userPassword, ...userData } = user.toJSON();
 
-async function loginUser(req, res) {
+    res.status(201).json({ message: 'User registered successfully', user: userData });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.login = async (req, res) => {
   try {
-    const { emailOrPhone, password } = req.body;
+    const { loginIdentifier, password } = req.body;
 
     const user = await User.findOne({
       where: {
-        [Op.or]: [{ email: emailOrPhone }, { phoneNumber: emailOrPhone }],
+        [Op.or]: [{ email: loginIdentifier }, { phoneNumber: loginIdentifier }],
       },
     });
 
     if (!user) {
-      return res.status(400).json({ error: 'Invalid email/phone or password' });
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const validPassword = await user.validatePassword(password);
+    const isPasswordValid = await user.comparePassword(password);
 
-    if (!validPassword) {
-      return res.status(400).json({ error: 'Invalid email/phone or password' });
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    return res.status(200).json({ message: 'Login successful', userId: user.id });
+    const token = jwt.sign({ userId: user.id }, 'your_jwt_secret', { expiresIn: '1h' });
+
+    res.json({ message: 'Login successful', token });
   } catch (error) {
-    return res.status(500).json({ error: 'An error occurred during login' });
+    res.status(500).json({ error: error.message });
   }
-}
+};
 
-async function requestPasswordReset(req, res) {
+exports.resetPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
     const user = await User.findOne({ where: { email } });
 
-    if (user) {
-      // Implement password reset token generation and email sending
+    if (!user) {
+      return res.status(400).json({ error: 'Email not found' });
     }
 
-    return res.status(200).json({ message: 'If an account with that email exists, a password reset link has been sent' });
+    res.json({ message: 'Password reset link has been sent to your email' });
   } catch (error) {
-    return res.status(500).json({ error: 'An error occurred during password reset' });
+    res.status(500).json({ error: error.message });
   }
-}
-
-module.exports = {
-  registerUser,
-  loginUser,
-  requestPasswordReset,
 };
