@@ -1,75 +1,143 @@
 .register-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
 }
 
-.register-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
+.register-left {
+  flex: 2;
+  position: relative;
+  background: linear-gradient(to bottom, #283593, #1E88E5);
+}
+
+.overlay-text {
+  position: absolute;
+  bottom: 20%;
+  left: 10%;
+  color: #FFF1E5;
+}
+
+.overlay-text .logo {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.overlay-text h1 {
+  font-size: 3rem;
+  margin: 0 0 1rem;
+}
+
+.overlay-text p {
+  font-size: 1.2rem;
+}
+
+.register-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
 }
 
 .form-group label {
   display: block;
+  margin-bottom: 0.5rem;
   font-weight: bold;
-  margin-bottom: 5px;
 }
 
 .form-group input {
   width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #F5F5F7;
 }
 
-button[type="submit"] {
+.form-group input:focus {
+  outline: none;
+  border-color: #6A1B9A;
+  box-shadow: 0 0 0 2px rgba(106, 27, 154, 0.2);
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  padding-right: 2.5rem;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.btn-register,
+.btn-login,
+.btn-google-login {
   width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
   border: none;
+  border-radius: 4px;
+  font-size: 1rem;
   cursor: pointer;
-  font-size: 16px;
 }
 
-button[type="submit"]:hover {
-  background-color: #0056b3;
+.btn-register {
+  background-color: #6A1B9A;
+  color: #fff;
 }
 
-.social-login {
+.btn-register:hover {
+  background-color: #7B1FA2;
+}
+
+.btn-login {
+  background-color: #fff;
+  color: #6A1B9A;
+  border: 2px solid #6A1B9A;
+}
+
+.btn-login:hover {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+}
+
+.btn-google-login {
+  background-color: #DB4437;
+  color: #fff;
+}
+
+.btn-google-login:hover {
+  background-color: #E57373;
+}
+
+.forgot-password {
+  display: block;
   text-align: center;
-  margin: 20px 0;
-}
-
-.social-login p {
-  margin-bottom: 10px;
-}
-
-.google-signin-button {
-  background-color: #db4437;
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.google-signin-button:hover {
-  background-color: #c33d2e;
-}
-
-.login-redirect {
-  text-align: center;
-}
-
-.login-redirect a {
-  color: #007bff;
+  color: #6A1B9A;
   text-decoration: none;
 }
 
-.login-redirect a:hover {
+.forgot-password:hover {
   text-decoration: underline;
 }
