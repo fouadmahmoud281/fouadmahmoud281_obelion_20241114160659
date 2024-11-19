@@ -11,17 +11,22 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "sequelize": "6.12.0",
+        "sequelize": "latest",
         "express": "latest",
-        "jsonwebtoken": "8.5.1",
         "cors": "latest",
         "mysql": "latest",
-        "mysql2": "latest"
+        "mysql2": "latest",
+        "bcrypt": "latest",
+        "jsonwebtoken": "8.5.1",
+        "nodemailer": "^6.9.16",
+        "google-auth-library": "6.12.0"
     },
     "devDependencies": {
-        "bcrypt": "5.0.1",
         "sequelize": "6.6.5",
+        "jest": "27.0.5",
         "eslint": "7.32.0",
-        "jsonwebtoken": "8.5.1"
+        "bcrypt": "latest",
+        "jsonwebtoken": "8.5.1",
+        "google-auth-library": "7.0.0"
     }
 }
