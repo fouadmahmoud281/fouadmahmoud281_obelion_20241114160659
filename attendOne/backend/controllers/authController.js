@@ -1,7 +1,12 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const { Utils } = require('handlebars');
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
+const {sendEmail, generateVerificationCode} = require('../utils/emailUtil');
+
+
+
 
 exports.register = async (req, res) => {
   try {
@@ -61,6 +66,8 @@ exports.login = async (req, res) => {
   }
 };
 
+
+
 exports.resetPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -70,7 +77,9 @@ exports.resetPassword = async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: 'Email not found' });
     }
+    const verificationCode = generateVerificationCode();
 
+    await sendEmail(email, "Reset Password Code", `The reset password code is: ${verificationCode}, it will be expired soon.`);
     res.json({ message: 'Password reset link has been sent to your email' });
   } catch (error) {
     res.status(500).json({ error: error.message });

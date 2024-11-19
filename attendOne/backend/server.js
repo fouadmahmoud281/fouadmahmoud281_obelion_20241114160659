@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes'); // Adjust the path to your routes file
+const eventRoutes = require('./routes/eventRoutes'); // Adjust the path to your routes file
 
 const app = express();
 
@@ -11,6 +12,8 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api', eventRoutes);
+
 
 // Root route (optional)
 app.get('/', (req, res) => {
