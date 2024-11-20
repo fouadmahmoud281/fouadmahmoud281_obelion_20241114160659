@@ -12,7 +12,9 @@
     "license": "ISC",
     "dependencies": {
         "sequelize": "latest",
+        "react": "latest",
         "express": "latest",
+        "nodemailer": "8.1.1",
         "cors": "latest",
         "mysql": "latest",
         "mysql2": "latest",
@@ -21,11 +23,12 @@
         "google-auth-library": "6.12.0"
     },
     "devDependencies": {
-        "sequelize": "6.6.5",
+        "bcrypt": "latest",
         "jest": "27.0.5",
         "eslint": "7.32.0",
-        "bcrypt": "latest",
+        "nodemailer": "6.7.2",
         "jsonwebtoken": "8.5.1",
-        "google-auth-library": "7.0.0"
+        "google-auth-library": "7.0.0",
+        "sequelize": "6.6.5"
     }
 }
