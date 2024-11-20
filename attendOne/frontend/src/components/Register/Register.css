@@ -1,64 +1,95 @@
-.register-container {
+.register-container-unique {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   font-family: Arial, sans-serif;
+  background-image: url('D:\\attend\\fouadmahmoud281_obelion_20241114160659\\attendOne\\frontend\\public\\background.png');
+  background-size: cover;
+  background-position: center;
+  padding: 60px;
 }
 
-.register-left {
+.register-left-unique {
   flex: 2;
   position: relative;
-  background: linear-gradient(to bottom, #283593, #1E88E5);
 }
 
-.overlay-text {
+.overlay-text-unique {
   position: absolute;
   bottom: 20%;
   left: 10%;
   color: #FFF1E5;
 }
 
-.overlay-text .logo {
+.overlay-text-unique .logo-unique {
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 1rem;
 }
 
-.overlay-text h1 {
+.overlay-text-unique h1 {
   font-size: 3rem;
   margin: 0 0 1rem;
 }
 
-.overlay-text p {
+.overlay-text-unique p {
   font-size: 1.2rem;
 }
 
-.register-right {
+.register-right-unique {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.form-container {
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 2rem;
-  border-radius: 8px;
-  max-width: 400px;
+.form-container-unique {
+  padding: 80px 40px;
+  max-width: 490px;
   width: 100%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.20);
 }
 
-.form-group {
+.first-last-unique {
+  display: flex;
+  gap: 20px;
+}
+
+.form-group-unique {
   margin-bottom: 1rem;
 }
 
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
+.login-title-unique {
+  color: var(--Primary-light2, #F4F1FF);
+  font-family: "Open Sans";
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 }
 
-.form-group input {
+.login-sub-title-unique {
+  color: var(--Primary-light2, #F4F1FF);
+  font-family: "Open Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.form-group-unique label {
+  display: block;
+  color: var(--Primary-light, #EBE5FF);
+  font-family: "Open Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin-bottom: 8px;
+}
+
+.form-group-unique input {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #ccc;
@@ -66,21 +97,21 @@
   background-color: #F5F5F7;
 }
 
-.form-group input:focus {
+.form-group-unique input:focus {
   outline: none;
   border-color: #6A1B9A;
   box-shadow: 0 0 0 2px rgba(106, 27, 154, 0.2);
 }
 
-.password-input {
+.password-input-unique {
   position: relative;
 }
 
-.password-input input {
+.password-input-unique input {
   padding-right: 2.5rem;
 }
 
-.toggle-password {
+.toggle-password-unique {
   position: absolute;
   top: 50%;
   right: 0.75rem;
@@ -90,9 +121,9 @@
   cursor: pointer;
 }
 
-.btn-register,
-.btn-login,
-.btn-google-login {
+.btn-register-unique,
+.btn-login-unique,
+.btn-google-login-unique {
   width: 100%;
   padding: 0.75rem;
   margin-bottom: 1rem;
@@ -102,42 +133,65 @@
   cursor: pointer;
 }
 
-.btn-register {
+.btn-register-unique {
   background-color: #6A1B9A;
   color: #fff;
 }
 
-.btn-register:hover {
+.btn-register-unique:hover {
   background-color: #7B1FA2;
 }
 
-.btn-login {
+.btn-login-unique {
   background-color: #fff;
   color: #6A1B9A;
   border: 2px solid #6A1B9A;
 }
 
-.btn-login:hover {
+.btn-login-unique:hover {
   background-color: #F3E5F5;
   color: #7B1FA2;
 }
 
-.btn-google-login {
+.btn-google-login-unique {
   background-color: #DB4437;
   color: #fff;
 }
 
-.btn-google-login:hover {
+.btn-google-login-unique:hover {
   background-color: #E57373;
 }
 
-.forgot-password {
-  display: block;
+.forgot-password-unique {
   text-align: center;
   color: #6A1B9A;
   text-decoration: none;
+  cursor: pointer;
+  color: var(--secondary-dark, #EF5A29);
+font-family: "Open Sans";
+font-size: 16px;
+font-style: normal;
+font-weight: 600;
+line-height: normal;
+margin-left: 16px;
 }
 
-.forgot-password:hover {
+/* .forgot-password-unique:hover {
   text-decoration: underline;
+} */
+
+.forgot-password-span{
+  color: var(--Primary-light2, #F4F1FF);
+  text-align: center;
+  font-family: "Open Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.Navigation{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

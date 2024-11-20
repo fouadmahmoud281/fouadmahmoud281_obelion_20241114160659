@@ -8,10 +8,11 @@
         "client": "npm run --prefix client start"
     },
     "dependencies": {
+        "axios": "latest",
         "react": "latest",
         "react-dom": "latest",
-        "react-router-dom": "latest",
-        "axios": "latest",
+        "react-router-dom": "^6.28.0",
+        "react-scripts": "^5.0.1",
         "redux": "latest"
     },
     "devDependencies": {

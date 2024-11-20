@@ -3,30 +3,23 @@ import axios from 'axios';
 import './Login.css';
 
 function Login() {
-  const [isRegister, setIsRegister] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isResetPassword, setIsResetPassword] = useState(false);
 
-  const [registerData, setRegisterData] = useState({
-    firstName: '',
-    familyName: '',
-    email: '',
-    phone: '',
-    password: '',
-  });
-
+  // Login state
   const [loginData, setLoginData] = useState({
     loginIdentifier: '',
     password: '',
   });
-
-  const [registerError, setRegisterError] = useState('');
   const [loginError, setLoginError] = useState('');
 
-  const handleRegisterInputChange = (e) => {
-    const { name, value } = e.target;
-    setRegisterData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  // Password reset state
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetMessage, setResetMessage] = useState('');
+  const [resetError, setResetError] = useState('');
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleLoginInputChange = (e) => {
@@ -37,38 +30,8 @@ function Login() {
     }));
   };
 
-  const handleRegisterSubmit = async (e) => {
-    e.preventDefault();
-    setRegisterError('');
-    try {
-      const response = await axios.post(
-        'http://localhost:5000/api/auth/register',
-        {
-          firstName: registerData.firstName,
-          familyName: registerData.familyName,
-          email: registerData.email,
-          phoneNumber: registerData.phone,
-          password: registerData.password,
-        },
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-      setIsRegister(false);
-      setRegisterData({
-        firstName: '',
-        familyName: '',
-        email: '',
-        phone: '',
-        password: '',
-      });
-    } catch (error) {
-      if (error.response && error.response.data && error.response.data.error) {
-        setRegisterError(error.response.data.error);
-      } else {
-        setRegisterError('An error occurred during registration.');
-      }
-    }
+  const handleResetInputChange = (e) => {
+    setResetEmail(e.target.value);
   };
 
   const handleLoginSubmit = async (e) => {
@@ -96,8 +59,25 @@ function Login() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:5000/api/auth/google';
+  const handleResetSubmit = async (e) => {
+    e.preventDefault();
+    setResetError('');
+    setResetMessage('');
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/api/auth/reset-password',
+        { email: resetEmail },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+      setResetMessage(
+        response.data.message ||
+          'If an account with that email exists, a password reset link has been sent.'
+      );
+    } catch (error) {
+      setResetError(
+        error.response?.data?.error || 'An error occurred during password reset.'
+      );
+    }
   };
 
   return (
@@ -117,119 +97,92 @@ function Login() {
       </div>
       <div className="login-right">
         <div className="login-form-container">
-          <div className="form-toggle">
-            <button onClick={() => setIsRegister(false)} className={!isRegister ? 'active' : ''}>
-              Login
-            </button>
-            <button onClick={() => setIsRegister(true)} className={isRegister ? 'active' : ''}>
-              Register
-            </button>
-          </div>
-          {isRegister ? (
-            <form className="register-form" onSubmit={handleRegisterSubmit}>
-              {registerError && <p className="error-message">{registerError}</p>}
-              <div className="form-group">
-                <label htmlFor="firstName">First Name</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  required
-                  value={registerData.firstName}
-                  onChange={handleRegisterInputChange}
-                />
+          {isResetPassword ? (
+            <>
+              <h1 className="Login-Title">Reset Password</h1>
+              <p className="Login-sub-title">
+                Enter your email to receive a password reset link
+              </p>
+              {resetMessage && <p className="success-message">{resetMessage}</p>}
+              {resetError && <p className="error-message">{resetError}</p>}
+              {!resetMessage && (
+                <form className="reset-form" onSubmit={handleResetSubmit}>
+                  <div className="form-group">
+                    <label htmlFor="resetEmail">Email Address</label>
+                    <input
+                      type="email"
+                      id="resetEmail"
+                      name="email"
+                      required
+                      value={resetEmail}
+                      onChange={handleResetInputChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <button type="submit">Reset Password</button>
+                  </div>
+                </form>
+              )}
+              <div className="form-toggle">
+                <a onClick={() => setIsResetPassword(false)} className="switch-link">
+                  Back to Login
+                </a>
               </div>
-              <div className="form-group">
-                <label htmlFor="familyName">Family Name</label>
-                <input
-                  type="text"
-                  id="familyName"
-                  name="familyName"
-                  required
-                  value={registerData.familyName}
-                  onChange={handleRegisterInputChange}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  value={registerData.email}
-                  onChange={handleRegisterInputChange}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="phone">Phone Number</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  required
-                  value={registerData.phone}
-                  onChange={handleRegisterInputChange}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="registerPassword">Password</label>
-                <div className="password-input">
-                  <input
-                    type="password"
-                    id="registerPassword"
-                    name="password"
-                    required
-                    value={registerData.password}
-                    onChange={handleRegisterInputChange}
-                  />
-                </div>
-              </div>
-              <div className="form-group">
-                <button type="submit">Register</button>
-              </div>
-            </form>
+            </>
           ) : (
-            <form className="login-form" onSubmit={handleLoginSubmit}>
+            <>
+              <h1 className="Login-Title">Welcome Back</h1>
+              <p className="Login-sub-title">Sign in to your account</p>
               {loginError && <p className="error-message">{loginError}</p>}
-              <div className="form-group">
-                <label htmlFor="loginIdentifier">Email or Phone Number</label>
-                <input
-                  type="text"
-                  id="loginIdentifier"
-                  name="loginIdentifier"
-                  required
-                  value={loginData.loginIdentifier}
-                  onChange={handleLoginInputChange}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="loginPassword">Password</label>
-                <div className="password-input">
+              <form className="login-form" onSubmit={handleLoginSubmit}>
+                <div className="form-group">
+                  <label htmlFor="loginIdentifier">Email or Phone Number</label>
                   <input
-                    type="password"
-                    id="loginPassword"
-                    name="password"
+                    type="text"
+                    id="loginIdentifier"
+                    name="loginIdentifier"
                     required
-                    value={loginData.password}
+                    value={loginData.loginIdentifier}
                     onChange={handleLoginInputChange}
                   />
                 </div>
-              </div>
-              <div className="form-group">
-                <a href="#" className="forgot-password">
-                  Forgot Password?
+                <div className="form-group">
+                  <label htmlFor="loginPassword">Password</label>
+                  <div className="password-input">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      id="loginPassword"
+                      name="password"
+                      required
+                      value={loginData.password}
+                      onChange={handleLoginInputChange}
+                    />
+                    <span
+                      className="toggle-password"
+                      onClick={togglePasswordVisibility}
+                    >
+                      <img src="/eye-slash.svg" alt="toggle visibility" />
+                    </span>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <a
+                    onClick={() => setIsResetPassword(true)}
+                    className="forgot-password"
+                  >
+                    Forgot Password?
+                  </a>
+                </div>
+                <div className="form-group">
+                  <button type="submit">Login</button>
+                </div>
+              </form>
+              <div className="social-login">
+                <a href="/register" className="register-link">
+                  Register
                 </a>
               </div>
-              <div className="form-group">
-                <button type="submit">Login</button>
-              </div>
-              <div className="social-login">
-                <button type="button" className="google-login" onClick={handleGoogleLogin}>
-                  Sign in with Google
-                </button>
-              </div>
-            </form>
+            </>
           )}
         </div>
       </div>

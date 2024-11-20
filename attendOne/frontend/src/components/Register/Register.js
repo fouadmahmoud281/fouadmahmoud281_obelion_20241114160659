@@ -9,9 +9,11 @@ function Register() {
     email: '',
     phoneNumber: '',
     password: '',
+    confirmPassword: '',
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -27,18 +29,29 @@ function Register() {
     setShowPassword(!showPassword);
   };
 
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage('');
     setSuccessMessage('');
+
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage('Passwords do not match.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:5000/api/auth/register', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
       const data = await response.json();
       if (response.ok) {
@@ -55,50 +68,50 @@ function Register() {
   };
 
   const handleLoginClick = () => {
-    navigate('/login');
-  };
-
-  const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:5000/api/auth/google';
+    navigate('/');
   };
 
   return (
-    <div className="register-container">
-      <div className="register-left">
-        <div className="overlay-text">
-          <div className="logo">AttendOne</div>
+    <div className="register-container-unique">
+      <div className="register-left-unique">
+        <div className="overlay-text-unique">
+          <div className="logo-unique">AttendOne</div>
           <h1>Welcome to AttendOne</h1>
           <p>Your event management solution</p>
         </div>
       </div>
-      <div className="register-right">
-        <div className="form-container">
+      <div className="register-right-unique">
+        <div className="form-container-unique">
+          <h1 className="login-title-unique">Complete Your Registration</h1>
+          <p className="login-sub-title-unique">Sign up new account</p>
           <form onSubmit={handleSubmit}>
             {errorMessage && <div className="error-message">{errorMessage}</div>}
             {successMessage && <div className="success-message">{successMessage}</div>}
-            <div className="form-group">
-              <label htmlFor="firstName">First Name</label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                placeholder="First Name"
-                value={formData.firstName}
-                onChange={handleChange}
-              />
+            <div className="first-last-unique">
+              <div className="form-group-unique">
+                <label htmlFor="firstName">First Name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  placeholder="First Name"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group-unique">
+                <label htmlFor="familyName">Family Name</label>
+                <input
+                  type="text"
+                  id="familyName"
+                  name="familyName"
+                  placeholder="Family Name"
+                  value={formData.familyName}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="familyName">Family Name</label>
-              <input
-                type="text"
-                id="familyName"
-                name="familyName"
-                placeholder="Family Name"
-                value={formData.familyName}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
+            <div className="form-group-unique">
               <label htmlFor="email">Email</label>
               <input
                 type="email"
@@ -109,7 +122,7 @@ function Register() {
                 onChange={handleChange}
               />
             </div>
-            <div className="form-group">
+            <div className="form-group-unique">
               <label htmlFor="phoneNumber">Phone Number</label>
               <input
                 type="tel"
@@ -120,9 +133,9 @@ function Register() {
                 onChange={handleChange}
               />
             </div>
-            <div className="form-group">
+            <div className="form-group-unique">
               <label htmlFor="password">Password</label>
-              <div className="password-input">
+              <div className="password-input-unique">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
@@ -132,21 +145,43 @@ function Register() {
                   onChange={handleChange}
                 />
                 <span
-                  className="toggle-password"
+                  className="toggle-password-unique"
                   onClick={togglePasswordVisibility}
-                />
+                >
+                  <img src="/eye-slash.svg" alt="toggle visibility" />
+                </span>
               </div>
             </div>
-            <button type="submit" className="btn-register" disabled={loading}>
-              {loading ? 'Registering...' : 'Register'}
+            <div className="form-group-unique">
+              <label htmlFor="confirmPassword">Confirm Password</label>
+              <div className="password-input-unique">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
+                <span
+                  className="toggle-password-unique"
+                  onClick={toggleConfirmPasswordVisibility}
+                >
+                  <img src="/eye-slash.svg" alt="toggle visibility" />
+                </span>
+              </div>
+            </div>
+            <button type="submit" className="btn-register-unique" disabled={loading}>
+              {loading ? 'Registering...' : 'Sign up'}
             </button>
-            <button type="button" className="btn-login" onClick={handleLoginClick}>
-              Login
-            </button>
-            <button type="button" className="btn-google-login" onClick={handleGoogleLogin}>
-              Login with Google
-            </button>
-            <a href="/reset-password" className="forgot-password">Forgot Password?</a>
+            <div className="Navigation">
+              <span href="/reset-password" className="forgot-password-span">
+              Already have account ? 
+              </span>
+              <a onClick={handleLoginClick} className="forgot-password-unique">
+                Login
+              </a>
+            </div>
           </form>
         </div>
       </div>
