@@ -16,7 +16,7 @@ function App() {
   return (
     <div className="App">
    {/* <Register/> */}
-    {/* <Login/> */}
+    <Login/>
     {/* <PasswordReset/> */}
     <StepOne />
     {/* <StepTwo /> */}

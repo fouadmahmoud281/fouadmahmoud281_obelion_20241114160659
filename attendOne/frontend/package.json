@@ -8,14 +8,15 @@
         "client": "npm run --prefix client start"
     },
     "dependencies": {
+        "axios": "latest",
         "react": "latest",
         "react-dom": "latest",
         "react-router-dom": "latest",
-        "axios": "latest",
         "redux": "latest"
     },
     "devDependencies": {
         "eslint": "7.32.0",
+        "html-webpack-plugin": "^5.6.3",
         "react": "latest"
     },
     "browserslist": {
