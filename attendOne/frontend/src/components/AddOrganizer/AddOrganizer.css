@@ -1,0 +1,161 @@
+/* Global styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F5F5F5;
+  font-size: 14px;
+  color: #000000;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: inherit;
+}
+
+/* Main container */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #E0E0E0;
+  padding: 0 16px;
+  z-index: 1000;
+}
+
+.logo-section img {
+  height: 40px;
+}
+
+.profile-section p {
+  margin: 0;
+  font-weight: bold;
+}
+
+/* Sidebar */
+nav {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  width: 250px;
+  height: calc(100% - 64px);
+  background-color: #E0E0E0;
+  padding-top: 16px;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li {
+  padding: 12px 16px;
+  margin: 4px 0;
+  cursor: pointer;
+}
+
+nav ul li:hover {
+  background-color: #D3C1E5;
+}
+
+/* Main content */
+main {
+  margin-top: 64px;
+  margin-left: 250px;
+  padding: 16px;
+}
+
+/* Top bar */
+.top-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.top-bar input[type="text"] {
+  margin-right: 8px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.top-bar button {
+  padding: 8px 16px;
+  background-color: #D3C1E5;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px #ccc;
+}
+
+.top-bar button:hover {
+  background-color: #c4a7de;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+}
+
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+table th {
+  background-color: #D3C1E5;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+table td {
+  text-align: left;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Buttons in table */
+table td button {
+  padding: 4px 8px;
+  margin-right: 4px;
+  background-color: #D3C1E5;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px #ccc;
+}
+
+table td button:hover {
+  background-color: #c4a7de;
+}
+
+/* Input checkboxes */
+input[type="checkbox"] {
+  transform: scale(1.2);
+  margin: 0 8px;
+}
+
+/* Adjust input fields */
+input[type="text"] {
+  border-radius: 4px;
+}
