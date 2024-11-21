@@ -1,71 +1,72 @@
 const Organizer = require('../models/Organizer');
-const { Op } = require('sequelize');
 
-exports.getOrganizers = async function(req, res) {
+const createOrganizer = async (req, res) => {
     try {
-        const { searchQuery } = req.query;
-        let condition = {};
-        if (searchQuery) {
-            condition = {
-                where: {
-                    name: {
-                        [Op.like]: `%${searchQuery}%`
-                    }
-                }
-            };
+        const { first_name, last_name, email, role, password } = req.body;
+        if (!first_name || !last_name || !email || !role || !password) {
+            return res.status(400).json({ error: 'All fields are required' });
         }
-        const organizers = await Organizer.findAll(condition);
-        res.json(organizers);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to retrieve organizers' });
-    }
-};
-
-exports.createOrganizer = async function(req, res) {
-    try {
-        const { name } = req.body;
-        if (!name || name.trim() === '') {
-            return res.status(400).json({ error: 'Organizer name is required' });
-        }
-        const existingOrganizer = await Organizer.findOne({ where: { name } });
+        const existingOrganizer = await Organizer.findOne({ where: { email } });
         if (existingOrganizer) {
-            return res.status(400).json({ error: 'Organizer with this name already exists' });
+            return res.status(409).json({ error: 'Email already exists' });
         }
-        const organizer = await Organizer.create({ name });
-        res.status(201).json(organizer);
+        const organizer = await Organizer.create({
+            first_name,
+            last_name,
+            email,
+            role,
+            password,
+        });
+        return res.status(201).json(organizer);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to create organizer' });
+        return res.status(500).json({ error: 'An error occurred' });
     }
 };
 
-exports.updateOrganizer = async function(req, res) {
+const getOrganizers = async (req, res) => {
+    try {
+        const organizers = await Organizer.findAll();
+        return res.status(200).json(organizers);
+    } catch (error) {
+        return res.status(500).json({ error: 'An error occurred' });
+    }
+};
+
+const getOrganizerById = async (req, res) => {
     try {
         const { id } = req.params;
-        const { moduleA, moduleB, moduleC, name } = req.body;
         const organizer = await Organizer.findByPk(id);
         if (!organizer) {
             return res.status(404).json({ error: 'Organizer not found' });
         }
-        if (name !== undefined && name.trim() !== '') {
-            organizer.name = name;
-        }
-        if (moduleA !== undefined) {
-            organizer.moduleA = moduleA;
-        }
-        if (moduleB !== undefined) {
-            organizer.moduleB = moduleB;
-        }
-        if (moduleC !== undefined) {
-            organizer.moduleC = moduleC;
-        }
-        await organizer.save();
-        res.json(organizer);
+        return res.status(200).json(organizer);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to update organizer' });
+        return res.status(500).json({ error: 'An error occurred' });
     }
 };
 
-exports.deleteOrganizer = async function(req, res) {
+const updateOrganizer = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { first_name, last_name, email, role, password } = req.body;
+        const organizer = await Organizer.findByPk(id);
+        if (!organizer) {
+            return res.status(404).json({ error: 'Organizer not found' });
+        }
+        await organizer.update({
+            first_name,
+            last_name,
+            email,
+            role,
+            password,
+        });
+        return res.status(200).json(organizer);
+    } catch (error) {
+        return res.status(500).json({ error: 'An error occurred' });
+    }
+};
+
+const deleteOrganizer = async (req, res) => {
     try {
         const { id } = req.params;
         const organizer = await Organizer.findByPk(id);
@@ -73,8 +74,16 @@ exports.deleteOrganizer = async function(req, res) {
             return res.status(404).json({ error: 'Organizer not found' });
         }
         await organizer.destroy();
-        res.json({ message: 'Organizer deleted' });
+        return res.status(200).json({ message: 'Organizer deleted successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to delete organizer' });
+        return res.status(500).json({ error: 'An error occurred' });
     }
+};
+
+module.exports = {
+    createOrganizer,
+    getOrganizers,
+    getOrganizerById,
+    updateOrganizer,
+    deleteOrganizer,
 };
